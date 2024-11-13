@@ -1,6 +1,8 @@
 import pygame
 from constants import *
 from player import Player
+from asteroid import Asteroid
+from asteroidfield import *
 
 def main ():
     print("Starting asteroids!")
@@ -15,16 +17,21 @@ def main ():
     #Why did we remake delegates?
     updates = pygame.sprite.Group()
     draws = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
 
     Player.containers = (updates, draws)
+    Asteroid.containers = (asteroids, updates, draws)
+    AsteroidField.containers = (updates)
 
     player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+    asteroid_field = AsteroidField()
 
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return
+    running = True
+    while running:
+        if pygame:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return
             
         pygame.display.flip()
 
@@ -38,7 +45,12 @@ def main ():
         for obj in updates:
             obj.update(delta_time)
 
-        
+        #More diarrhea
+        for obj in asteroids:
+            if obj.check_collision(player):
+                print("Game over!")
+                running = False
+                pygame.quit()
  
         delta_time = (pyClock.tick(60)/1000)
 
