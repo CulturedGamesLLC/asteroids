@@ -23,3 +23,8 @@ class CircleShape(pygame.sprite.Sprite):
 
     def check_collision(self, other):
         return self.position.distance_to(other.position) <= self.radius + other.radius
+    
+    def bounce(self, other):
+        dir = self.position - other.position
+        if dir.length() != 0:
+            self.velocity = pygame.Vector2(self.position - other.position).normalize()*self.velocity.length()
